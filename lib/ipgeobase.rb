@@ -9,7 +9,7 @@ require "uri"
 require_relative "ipgeobase/version"
 require_relative "ipgeobase/ip_meta"
 
-# Service to fetch IP geo information
+# Gem to fetch IP geo information
 module Ipgeobase
   TEMPLATE = Addressable::Template.new("http://ip-api.com/xml/{ip}")
 
