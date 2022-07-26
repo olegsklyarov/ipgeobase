@@ -1,8 +1,21 @@
 # frozen_string_literal: true
 
-require_relative "ipgeobase/version"
+require "addressable/template"
+require "bundler/setup"
+require "net/http"
+require "nokogiri-happymapper"
+require "uri"
 
+require_relative "ipgeobase/version"
+require_relative "ipgeobase/ip_meta"
+
+# Service to fetch IP geo information
 module Ipgeobase
-  class Error < StandardError; end
-  # Your code goes here...
+  TEMPLATE = Addressable::Template.new("http://ip-api.com/xml/{ip}")
+
+  def self.lookup(ip)
+    uri = TEMPLATE.expand({ "ip" => ip }).to_s
+    response = Net::HTTP.get(URI(uri))
+    IPMeta.parse response, single: true
+  end
 end

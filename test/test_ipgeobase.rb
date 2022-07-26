@@ -7,7 +7,15 @@ class TestIpgeobase < Minitest::Test
     refute_nil ::Ipgeobase::VERSION
   end
 
-  def test_it_does_something_useful
-    assert false
+  def test_it_make_ipgeobase_request
+    response = load_fixture("8.8.8.8.xml")
+    uri = "http://ip-api.com/xml/8.8.8.8"
+    stub_request(:get, uri).to_return(body: response)
+    result = Ipgeobase.lookup("8.8.8.8")
+    assert { result.city.eql? "Ashburn" }
+    assert { result.country.eql? "United States" }
+    assert { result.countryCode.eql? "US" }
+    assert { result.lat.eql? "39.03" }
+    assert { result.lon.eql? "-77.5" }
   end
 end
