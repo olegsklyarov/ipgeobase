@@ -11,7 +11,8 @@ require_relative "ipgeobase/ip_meta"
 
 # Gem to fetch IP geo information
 module Ipgeobase
-  TEMPLATE = Addressable::Template.new("http://ip-api.com/xml/{ip}")
+  API = "http://ip-api.com/xml"
+  TEMPLATE = Addressable::Template.new("#{API}/{ip}")
 
   def self.lookup(ip)
     uri = TEMPLATE.expand({ "ip" => ip }).to_s

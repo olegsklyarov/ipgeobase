@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
-require "test_helper"
+require_relative "../test_helper"
 
 class TestIpgeobase < Minitest::Test
+  DELTA = 1e-5
+
   def setup
-    stub_request(:get, "http://ip-api.com/xml/8.8.8.8")
-      .to_return(body: load_fixture("8.8.8.8.xml"))
+    @ip = "8.8.8.8"
+    stub_request(:get, "#{Ipgeobase::API}/#{@ip}")
+      .to_return(body: load_fixture("#{@ip}.xml"))
   end
 
   def test_that_it_has_a_version_number
@@ -13,11 +16,11 @@ class TestIpgeobase < Minitest::Test
   end
 
   def test_it_make_ipgeobase_request
-    result = Ipgeobase.lookup("8.8.8.8")
+    result = Ipgeobase.lookup(@ip)
     assert { result.city.eql? "Ashburn" }
     assert { result.country.eql? "United States" }
     assert { result.countryCode.eql? "US" }
-    assert { result.lat.eql? "39.03" }
-    assert { result.lon.eql? "-77.5" }
+    assert_in_delta result.lat, 39.03, DELTA
+    assert_in_delta result.lon, -77.5, DELTA
   end
 end
